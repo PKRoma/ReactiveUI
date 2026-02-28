@@ -17,7 +17,7 @@ public sealed class AppLifetimeCoordinator : IDisposable
 
     private static readonly TimeSpan LockTimeout = TimeSpan.FromMilliseconds(500);
 
-    private readonly MemoryMappedFile _mmf;
+    private readonly MemoryMappedFile? _mmf;
     private readonly Mutex _mutex;
 
     /// <summary>
@@ -27,14 +27,17 @@ public sealed class AppLifetimeCoordinator : IDisposable
     {
         _mutex = new Mutex(false, MutexName, out var _);
 
-        try
+        if (OperatingSystem.IsWindows())
         {
-            _mmf = MemoryMappedFile.CreateOrOpen(MapName, capacity: 4);
-        }
-        catch
-        {
-            // Fallback: create a per-user mapping name if needed
-            _mmf = MemoryMappedFile.CreateOrOpen(MapName + "." + Environment.UserName, capacity: 4);
+            try
+            {
+                _mmf = MemoryMappedFile.CreateOrOpen(MapName, capacity: 4);
+            }
+            catch
+            {
+                // Fallback: create a per-user mapping name if needed
+                _mmf = MemoryMappedFile.CreateOrOpen(MapName + "." + Environment.UserName, capacity: 4);
+            }
         }
     }
 
@@ -54,11 +57,16 @@ public sealed class AppLifetimeCoordinator : IDisposable
     public void Dispose()
     {
         _mutex.Dispose();
-        _mmf.Dispose();
+        _mmf?.Dispose();
     }
 
     private int UpdateCount(Func<int, int> updater)
     {
+        if (_mmf is null)
+        {
+            return 0;
+        }
+
         var locked = false;
         try
         {

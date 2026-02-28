@@ -26,30 +26,22 @@ public class ReactiveObjectTests
         var fixture = new TestFixture { IsOnlyOneWord = beforeSet };
 
         var beforeFired = false;
-        fixture.Changing.Subscribe(async x =>
+        string? changingPropertyName = null;
+        string? changingValue = null;
+        fixture.Changing.Subscribe(x =>
         {
-            using (Assert.Multiple())
-            {
-                // XXX: The content of these asserts don't actually get
-                // propagated back, it only prevents before_fired from
-                // being set - we have to enable 1st-chance exceptions
-                // to see the real error
-                await Assert.That(x.PropertyName).IsEqualTo("IsOnlyOneWord");
-                await Assert.That(fixture.IsOnlyOneWord).IsEqualTo(beforeSet);
-            }
-
+            changingPropertyName = x.PropertyName;
+            changingValue = fixture.IsOnlyOneWord;
             beforeFired = true;
         });
 
         var afterFired = false;
-        fixture.Changed.Subscribe(async x =>
+        string? changedPropertyName = null;
+        string? changedValue = null;
+        fixture.Changed.Subscribe(x =>
         {
-            using (Assert.Multiple())
-            {
-                await Assert.That(x.PropertyName).IsEqualTo("IsOnlyOneWord");
-                await Assert.That(fixture.IsOnlyOneWord).IsEqualTo(afterSet);
-            }
-
+            changedPropertyName = x.PropertyName;
+            changedValue = fixture.IsOnlyOneWord;
             afterFired = true;
         });
 
@@ -59,6 +51,10 @@ public class ReactiveObjectTests
         {
             await Assert.That(beforeFired).IsTrue();
             await Assert.That(afterFired).IsTrue();
+            await Assert.That(changingPropertyName).IsEqualTo("IsOnlyOneWord");
+            await Assert.That(changingValue).IsEqualTo(beforeSet);
+            await Assert.That(changedPropertyName).IsEqualTo("IsOnlyOneWord");
+            await Assert.That(changedValue).IsEqualTo(afterSet);
         }
     }
 

@@ -28,9 +28,15 @@ public class ReactivePropertyTest
     [Test]
     public async Task DefaultValueIsRaisedOnSubscribe()
     {
-        using var rp = new ReactiveProperty<string>();
+        using var rp = new ReactiveProperty<string>(default, ImmediateScheduler.Instance, false, false);
         await Assert.That(rp.Value).IsNull();
-        rp.Subscribe(async x => await Assert.That(x).IsNull());
+        var receivedValue = false;
+        rp.Subscribe(x =>
+        {
+            receivedValue = true;
+        });
+
+        await Assert.That(receivedValue).IsTrue();
     }
 
     [Test]
@@ -73,20 +79,24 @@ public class ReactivePropertyTest
     [Test]
     public async Task InitialValue()
     {
-        using var rp = new ReactiveProperty<string>("ReactiveUI");
+        using var rp = new ReactiveProperty<string>("ReactiveUI", ImmediateScheduler.Instance, false, false);
         await Assert.That(rp.Value).IsEqualTo("ReactiveUI");
-        rp.Subscribe(async x => await Assert.That(x).IsEqualTo("ReactiveUI"));
+        string? received = null;
+        rp.Subscribe(x => received = x);
+        await Assert.That(received).IsEqualTo("ReactiveUI");
     }
 
     [Test]
     public async Task InitialValueSkipCurrent()
     {
-        using var rp = new ReactiveProperty<string>("ReactiveUI", true, false);
+        using var rp = new ReactiveProperty<string>("ReactiveUI", ImmediateScheduler.Instance, true, false);
         await Assert.That(rp.Value).IsEqualTo("ReactiveUI");
 
         // current value should be skipped
-        rp.Subscribe(async x => await Assert.That(x).IsEqualTo("ReactiveUI 2"));
+        string? received = null;
+        rp.Subscribe(x => received = x);
         rp.Value = "ReactiveUI 2";
+        await Assert.That(received).IsEqualTo("ReactiveUI 2");
         await Assert.That(rp.Value).IsEqualTo("ReactiveUI 2");
     }
 
@@ -216,11 +226,13 @@ public class ReactivePropertyTest
     [Test]
     public async Task SetValueRaisesEvents()
     {
-        using var rp = new ReactiveProperty<string>();
+        using var rp = new ReactiveProperty<string>(default, ImmediateScheduler.Instance, false, false);
         await Assert.That(rp.Value).IsNull();
         rp.Value = "ReactiveUI";
         await Assert.That(rp.Value).IsEqualTo("ReactiveUI");
-        rp.Subscribe(async x => await Assert.That(x).IsEqualTo("ReactiveUI"));
+        string? received = null;
+        rp.Subscribe(x => received = x);
+        await Assert.That(received).IsEqualTo("ReactiveUI");
     }
 
     [Test]

@@ -26,7 +26,8 @@ public class StringToNullableBooleanTypeConverterTests
         var result = converter.TryConvert("True", null, out var output);
 
         await Assert.That(result).IsTrue();
-        await Assert.That(output).IsEqualTo(true);
+        await Assert.That(output).IsNotNull();
+        await Assert.That((bool)output!).IsTrue();
     }
 
     [Test]
@@ -37,7 +38,8 @@ public class StringToNullableBooleanTypeConverterTests
         var result = converter.TryConvert("False", null, out var output);
 
         await Assert.That(result).IsTrue();
-        await Assert.That(output).IsEqualTo(false);
+        await Assert.That(output).IsNotNull();
+        await Assert.That((bool)output!).IsFalse();
     }
 
     [Test]
@@ -48,7 +50,8 @@ public class StringToNullableBooleanTypeConverterTests
         var result = converter.TryConvert("true", null, out var output);
 
         await Assert.That(result).IsTrue();
-        await Assert.That(output).IsEqualTo(true);
+        await Assert.That(output).IsNotNull();
+        await Assert.That((bool)output!).IsTrue();
     }
 
     [Test]
@@ -59,7 +62,8 @@ public class StringToNullableBooleanTypeConverterTests
         var result = converter.TryConvert("false", null, out var output);
 
         await Assert.That(result).IsTrue();
-        await Assert.That(output).IsEqualTo(false);
+        await Assert.That(output).IsNotNull();
+        await Assert.That((bool)output!).IsFalse();
     }
 
     [Test]

@@ -125,7 +125,9 @@ public class FinalAOTValidationTests
 
         // AOT-compatible: Activation
         var activationCount = 0;
-        viewModel.WhenActivated(async d =>
+        string? propertyValue = null;
+        bool? interactionResult = null;
+        viewModel.WhenActivated(d =>
         {
             activationCount++;
 
@@ -143,17 +145,18 @@ public class FinalAOTValidationTests
 
             // Execute mixed workflow
             command.Execute().Subscribe();
-            var result = interaction.Handle(Unit.Default).Wait();
-
-            using (Assert.Multiple())
-            {
-                await Assert.That(property.Value).IsEqualTo("updated");
-                await Assert.That(result).IsTrue();
-            }
+            interactionResult = interaction.Handle(Unit.Default).Wait();
+            propertyValue = property.Value;
         });
 
         viewModel.Activator.Activate();
-        await Assert.That(activationCount).IsEqualTo(1);
+
+        using (Assert.Multiple())
+        {
+            await Assert.That(activationCount).IsEqualTo(1);
+            await Assert.That(propertyValue).IsEqualTo("updated");
+            await Assert.That(interactionResult).IsTrue();
+        }
 
         viewModel.Activator.Deactivate();
     }

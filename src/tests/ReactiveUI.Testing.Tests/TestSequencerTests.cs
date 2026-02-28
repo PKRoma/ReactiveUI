@@ -26,7 +26,7 @@ public class TestSequencerTests
         var tcs = new TaskCompletionSource<bool>();
         var advanceCount = 0;
 
-        subject.Subscribe(async _ =>
+        subject.SelectMany(async _ =>
         {
             try
             {
@@ -38,7 +38,9 @@ public class TestSequencerTests
             {
                 tcs.TrySetException(ex);
             }
-        });
+
+            return Unit.Default;
+        }).Subscribe();
 
         using (Assert.Multiple())
         {

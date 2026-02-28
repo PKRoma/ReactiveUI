@@ -153,7 +153,8 @@ public class BooleanToVisibilityTypeConverterTest
         await Assert.That(success).IsTrue();
 
         // With Inverse hint, Visible should become false
-        await Assert.That(result).IsEqualTo(false);
+        await Assert.That(result).IsNotNull();
+        await Assert.That((bool)result!).IsFalse();
     }
 
 #if !HAS_UNO && !HAS_WINUI && !IS_MAUI
