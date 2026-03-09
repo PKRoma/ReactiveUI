@@ -72,13 +72,13 @@
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="$(XamarinAndroidXLifecycleLiveDataVersion)" />
     <PackageVersion Include="Xamarin.AndroidX.Lifecycle.LiveData.Core.Ktx" Version="$(XamarinAndroidXLifecycleLiveDataVersion)" />
     <!-- Fragment/Collection/SavedState to match their latest constraints -->
-    <PackageVersion Include="Xamarin.AndroidX.Fragment" Version="1.8.9.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.9.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Collection.Jvm" Version="1.5.0.4" />
-    <PackageVersion Include="Xamarin.AndroidX.Collection.Ktx" Version="1.5.0.4" />
-    <PackageVersion Include="Xamarin.AndroidX.SavedState" Version="1.4.0.1" />
-    <PackageVersion Include="Xamarin.AndroidX.SavedState.SavedState.Ktx" Version="1.4.0.1" />
-    <PackageVersion Include="Xamarin.AndroidX.Preference" Version="1.2.1.16" />
+    <PackageVersion Include="Xamarin.AndroidX.Fragment" Version="1.8.9.2" />
+    <PackageVersion Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.9.2" />
+    <PackageVersion Include="Xamarin.AndroidX.Collection.Jvm" Version="1.5.0.5" />
+    <PackageVersion Include="Xamarin.AndroidX.Collection.Ktx" Version="1.5.0.5" />
+    <PackageVersion Include="Xamarin.AndroidX.SavedState" Version="1.4.0.2" />
+    <PackageVersion Include="Xamarin.AndroidX.SavedState.SavedState.Ktx" Version="1.4.0.2" />
+    <PackageVersion Include="Xamarin.AndroidX.Preference" Version="1.2.1.17" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseMaui)' != 'true'">
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
